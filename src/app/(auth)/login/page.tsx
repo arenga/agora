@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ export default function LoginPage() {
   const handleOAuthLogin = async (provider: 'kakao' | 'google') => {
     setLoading(true);
     const supabase = createClient();
-    
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
@@ -79,9 +79,7 @@ export default function LoginPage() {
               required
             />
           </div>
-          {error && (
-            <p className="text-body-sm text-destructive">{error}</p>
-          )}
+          {error && <p className="text-body-sm text-destructive">{error}</p>}
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? '로그인 중...' : '이메일로 로그인'}
           </Button>
@@ -103,7 +101,7 @@ export default function LoginPage() {
             onClick={() => handleOAuthLogin('kakao')}
             disabled={loading}
           >
-            <span className="mr-2">💬</span>
+            <span className="mr-2">⚡</span>
             카카오로 계속하기
           </Button>
           <Button
@@ -112,7 +110,7 @@ export default function LoginPage() {
             onClick={() => handleOAuthLogin('google')}
             disabled={loading}
           >
-            <span className="mr-2">🔍</span>
+            <span className="mr-2">⚡</span>
             Google로 계속하기
           </Button>
         </div>
@@ -126,5 +124,13 @@ export default function LoginPage() {
         </p>
       </CardFooter>
     </Card>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }
