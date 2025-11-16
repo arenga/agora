@@ -1,35 +1,35 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 
-/* Pretendard ?怨좊뱜 */
+/* Pretendard 글꼴 */
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
 
-/* Material Symbols ?袁⑹뵠??*/
+/* Material Symbols 아이콘 */
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Primary Colors - ?袁㏉???遺우쁽????뽯뮞??*/
+  /* Primary Colors - 아고라 디자인 시스템 */
   --color-primary: #15274c;
   --color-primary-hover: #1e3a6e;
   --color-primary-active: #0f1d38;
 
   /* Accent Colors */
-  --color-accent: #D35400;
+  --color-accent: #d35400;
   --color-accent-hover: #e8690b;
   --color-accent-active: #b84a00;
 
   /* Background Colors */
-  --background-card: #FFFFFF;
-  --background-elevated: #F5F5F5;
+  --background-card: #ffffff;
+  --background-elevated: #f5f5f5;
 
   /* Text Colors */
   --text-primary: #15274c;
   --text-secondary: #64748b;
   --text-tertiary: #94a3b8;
-  --text-on-primary: #FFFFFF;
-  --text-on-accent: #FFFFFF;
+  --text-on-primary: #ffffff;
+  --text-on-accent: #ffffff;
 
   /* Border Colors */
   --border-default: #e2e8f0;
@@ -66,36 +66,36 @@
   --font-sans: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', Consolas, monospace;
   --radius: 0.625rem;
-  /* shadcn/ui Variables - ?袁㏉???遺우쁽????뽯뮞???怨몄뒠 */
-  --background: #FAFAFA;
+  /* shadcn/ui Variables - 아고라 디자인 시스템용 */
+  --background: #fafafa;
   --foreground: #15274c;
-  --card: #FFFFFF;
+  --card: #ffffff;
   --card-foreground: #15274c;
-  --popover: #FFFFFF;
+  --popover: #ffffff;
   --popover-foreground: #15274c;
   --primary: #15274c;
-  --primary-foreground: #FFFFFF;
-  --secondary: #F5F5F5;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f5;
   --secondary-foreground: #15274c;
-  --muted: #F5F5F5;
+  --muted: #f5f5f5;
   --muted-foreground: #64748b;
-  --accent: #D35400;
-  --accent-foreground: #FFFFFF;
+  --accent: #d35400;
+  --accent-foreground: #ffffff;
   --destructive: #dc2626;
   --border: #e2e8f0;
   --input: #e2e8f0;
   --ring: #15274c;
-  --chart-1: #D35400;
+  --chart-1: #d35400;
   --chart-2: #15274c;
   --chart-3: #16a34a;
   --chart-4: #0284c7;
   --chart-5: #d97706;
-  --sidebar: #FAFAFA;
+  --sidebar: #fafafa;
   --sidebar-foreground: #15274c;
   --sidebar-primary: #15274c;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #D35400;
-  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #d35400;
+  --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #e2e8f0;
   --sidebar-ring: #15274c;
 }
@@ -120,12 +120,14 @@
 @theme inline {
   --color-background: #fafafa;
   --color-foreground: #15274c;
-  --font-sans: ''Pretendard Variable'', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-  --font-mono: ''JetBrains Mono'', Consolas, monospace;
+  --font-sans: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, monospace;
 
   /* Custom Colors */
-  --color-primary-*: #15274c;
-  --color-accent-*: #D35400;
+  --color-primary: #15274c;
+  --color-primary-foreground: #ffffff;
+  --color-accent: #d35400;
+  --color-accent-foreground: #ffffff;
   --color-success: #16a34a;
   --color-warning: #d97706;
   --color-error: #dc2626;
@@ -133,7 +135,7 @@
   --color-sidebar-ring: #15274c;
   --color-sidebar-border: #e2e8f0;
   --color-sidebar-accent-foreground: #ffffff;
-  --color-sidebar-accent: #D35400;
+  --color-sidebar-accent: #d35400;
   --color-sidebar-primary-foreground: #ffffff;
   --color-sidebar-primary: #15274c;
   --color-sidebar-foreground: #15274c;
@@ -142,19 +144,15 @@
   --color-chart-4: #0284c7;
   --color-chart-3: #16a34a;
   --color-chart-2: #15274c;
-  --color-chart-1: #D35400;
+  --color-chart-1: #d35400;
   --color-ring: #15274c;
   --color-input: #e2e8f0;
   --color-border: #e2e8f0;
   --color-destructive: #dc2626;
-  --color-accent-foreground: #ffffff;
-  --color-accent: #D35400;
   --color-muted-foreground: #64748b;
   --color-muted: #f5f5f5;
   --color-secondary-foreground: #15274c;
   --color-secondary: #f5f5f5;
-  --color-primary-foreground: #ffffff;
-  --color-primary: #15274c;
   --color-popover-foreground: #15274c;
   --color-popover: #ffffff;
   --color-card-foreground: #15274c;
@@ -295,7 +293,7 @@ body {
 }
 
 .dark {
-  /* Dark Mode - ?袁㏉???遺우쁽????뽯뮞??*/
+  /* Dark Mode - 아고라 디자인 시스템 */
   --background: #0f172a;
   --foreground: #f1f5f9;
   --card: #1e293b;
@@ -337,6 +335,4 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
-
 
