@@ -6,7 +6,7 @@ import { BellOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface NotificationBellProps {
-  children: React.ReactElement;
+  children: React.ReactElement<{ onClick?: (event: React.MouseEvent<Element, MouseEvent>) => void } & React.AriaAttributes>;
 }
 
 const mockNotifications = [
