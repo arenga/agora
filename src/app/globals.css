@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
-/* Pretendard 폰트 */
+/* Pretendard ?�트 */
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
 
-/* Material Symbols 아이콘 */
+/* Material Symbols ?�이�?*/
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Primary Colors - 아고라 디자인 시스템 */
+  /* Primary Colors - ?�고???�자???�스??*/
   --color-primary: #15274c;
   --color-primary-hover: #1e3a6e;
   --color-primary-active: #0f1d38;
@@ -66,7 +66,7 @@
   --font-sans: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', Consolas, monospace;
   --radius: 0.625rem;
-  /* shadcn/ui Variables - 아고라 디자인 시스템 적용 */
+  /* shadcn/ui Variables - ?�고???�자???�스???�용 */
   --background: #FAFAFA;
   --foreground: #15274c;
   --card: #FFFFFF;
@@ -118,51 +118,51 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+  --color-background: #fafafa;
+  --color-foreground: #15274c;
+  --font-sans: ''Pretendard Variable'', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  --font-mono: ''JetBrains Mono'', Consolas, monospace;
 
   /* Custom Colors */
-  --color-primary-*: var(--color-primary);
-  --color-accent-*: var(--color-accent);
-  --color-success: var(--color-success);
-  --color-warning: var(--color-warning);
-  --color-error: var(--color-error);
-  --color-info: var(--color-info);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --color-primary-*: #15274c;
+  --color-accent-*: #D35400;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+  --color-info: #0284c7;
+  --color-sidebar-ring: #15274c;
+  --color-sidebar-border: #e2e8f0;
+  --color-sidebar-accent-foreground: #ffffff;
+  --color-sidebar-accent: #D35400;
+  --color-sidebar-primary-foreground: #ffffff;
+  --color-sidebar-primary: #15274c;
+  --color-sidebar-foreground: #15274c;
+  --color-sidebar: #fafafa;
+  --color-chart-5: #d97706;
+  --color-chart-4: #0284c7;
+  --color-chart-3: #16a34a;
+  --color-chart-2: #15274c;
+  --color-chart-1: #D35400;
+  --color-ring: #15274c;
+  --color-input: #e2e8f0;
+  --color-border: #e2e8f0;
+  --color-destructive: #dc2626;
+  --color-accent-foreground: #ffffff;
+  --color-accent: #D35400;
+  --color-muted-foreground: #64748b;
+  --color-muted: #f5f5f5;
+  --color-secondary-foreground: #15274c;
+  --color-secondary: #f5f5f5;
+  --color-primary-foreground: #ffffff;
+  --color-primary: #15274c;
+  --color-popover-foreground: #15274c;
+  --color-popover: #ffffff;
+  --color-card-foreground: #15274c;
+  --color-card: #ffffff;
+  --radius-sm: calc(0.625rem - 4px);
+  --radius-md: calc(0.625rem - 2px);
+  --radius-lg: 0.625rem;
+  --radius-xl: calc(0.625rem + 4px);
 }
 
 /* Base Styles */
@@ -295,7 +295,7 @@ body {
 }
 
 .dark {
-  /* Dark Mode - 아고라 디자인 시스템 */
+  /* Dark Mode - ?�고???�자???�스??*/
   --background: #0f172a;
   --foreground: #f1f5f9;
   --card: #1e293b;
@@ -337,3 +337,4 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
