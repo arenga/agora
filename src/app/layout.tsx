@@ -2,7 +2,6 @@
 import './globals.css';
 import { Providers } from '@/components/providers';
 import { siteConfig } from '@/config/site';
-import { Header } from '@/components/layout/header';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -44,10 +43,7 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
-        <Providers>
-          <Header />
-          <main className="mx-auto max-w-5xl px-4 py-10">{children}</main>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
