@@ -11,7 +11,12 @@ interface Profile {
     philosophers: string[];
     themes: string[];
   };
+  reading_streak: number;
+  total_highlights: number;
+  total_posts: number;
+  total_comments: number;
   created_at: string;
+  updated_at: string;
 }
 
 interface AuthState {
