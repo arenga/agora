@@ -5,77 +5,72 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuthStore } from "@/store/auth";
-import { ThemeToggle } from "./theme-toggle";
-import { Menu, Bell, User, BookOpen, Users, Archive } from "lucide-react";
+import { Menu, User } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
-  { href: "/", label: "오늘의 철학", icon: BookOpen },
-  { href: "/community", label: "커뮤니티", icon: Users },
-  { href: "/archive", label: "아카이브", icon: Archive },
+  { href: "/", label: "Philostory" },
+  { href: "/community", label: "Agora Square" },
+  { href: "/archive", label: "Archive" },
+  { href: "/my-archive", label: "My Archive" },
 ];
 
 export function Header() {
   const pathname = usePathname();
-  const { user, profile, signOut } = useAuthStore();
+  const { user, signOut } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
+    <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200">
+      <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="mr-6 flex items-center space-x-2">
-          <span className="text-h4 font-bold text-primary">아고라</span>
+        <Link href="/" className="flex items-center">
+          <span className="text-xl font-semibold text-gray-900">
+            <span className="text-blue-600">⚡</span> Agora
+          </span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex md:flex-1 md:items-center md:space-x-6">
+        <nav className="hidden md:flex md:items-center md:space-x-8">
           {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+            const isActive = pathname === item.href ||
+              (item.href !== "/" && pathname.startsWith(item.href));
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center space-x-1 text-body-sm transition-colors ${
+                className={`text-sm font-medium transition-colors ${
                   isActive
-                    ? "text-primary font-medium"
-                    : "text-muted-foreground hover:text-primary"
+                    ? "text-gray-900"
+                    : "text-gray-600 hover:text-gray-900"
                 }`}
               >
-                <Icon className="h-4 w-4" />
-                <span>{item.label}</span>
+                {item.label}
               </Link>
             );
           })}
         </nav>
 
         {/* Right Side Actions */}
-        <div className="flex flex-1 items-center justify-end space-x-2">
-          <ThemeToggle />
-
+        <div className="flex items-center space-x-4">
           {user ? (
-            <>
-              <Button variant="ghost" size="icon" className="hidden md:flex">
-                <Bell className="h-4 w-4" />
-              </Button>
-              <Link href="/my-archive">
-                <Button variant="ghost" size="icon" className="hidden md:flex">
-                  <User className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => signOut()}
-                className="hidden md:flex"
-              >
-                로그아웃
-              </Button>
-            </>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={() => signOut()}
+            >
+              <User className="h-5 w-5 text-gray-600" />
+            </Button>
           ) : (
-            <Link href="/login" className="hidden md:block">
-              <Button size="sm">로그인</Button>
+            <Link href="/login">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full"
+              >
+                <User className="h-5 w-5 text-gray-600" />
+              </Button>
             </Link>
           )}
 
@@ -87,36 +82,22 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-              <nav className="flex flex-col space-y-4">
-                {navItems.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center space-x-2 text-body py-2"
-                    >
-                      <Icon className="h-5 w-5" />
-                      <span>{item.label}</span>
-                    </Link>
-                  );
-                })}
+              <nav className="flex flex-col space-y-4 mt-8">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-base py-2 text-gray-700 hover:text-gray-900"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
                 <hr />
                 {user ? (
-                  <>
-                    <Link
-                      href="/my-archive"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center space-x-2 text-body py-2"
-                    >
-                      <User className="h-5 w-5" />
-                      <span>내 아카이브</span>
-                    </Link>
-                    <Button variant="outline" onClick={() => signOut()}>
-                      로그아웃
-                    </Button>
-                  </>
+                  <Button variant="outline" onClick={() => signOut()}>
+                    로그아웃
+                  </Button>
                 ) : (
                   <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
                     <Button className="w-full">로그인</Button>

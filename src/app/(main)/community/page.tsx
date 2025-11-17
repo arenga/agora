@@ -2,41 +2,38 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { PenSquare, TrendingUp, Clock, Award, Filter } from "lucide-react";
+import { MessageSquare, Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { PostCard } from "@/components/community/post-card";
 import { cn } from "@/lib/utils";
 import type { Post, Profile } from "@/types/database";
 
-type SortType = "hot" | "new" | "top";
-type CategoryType = "all" | "discussion" | "question" | "insight" | "recommendation" | "free";
+type CategoryType = "today" | "agora" | "philosopher" | "all";
+type SortType = "newest" | "popular";
 
-// 샘플 데이터 (나중에 Supabase에서 가져옴)
+// 샘플 데이터
 const samplePosts: (Post & { author?: Profile })[] = [
   {
     id: "1",
     author_id: "user1",
-    title: "니체의 '신은 죽었다'를 현대 사회에 어떻게 적용할 수 있을까요?",
+    title: "[오늘의 질문] 소크라테스가 말한 '악법도 법이다'에 대해 어떻게 생각하시나요?",
     content:
-      "니체가 말한 '신은 죽었다'는 단순히 종교의 죽음이 아니라 전통적 가치 체계의 붕괴를 의미한다고 생각합니다. 현대 사회에서 우리는 어떤 새로운 가치를 만들어가야 할까요? 여러분의 생각이 궁금합니다.",
+      "소크라테스의 존법정신을 나타내는 유명한 명언지만, 현재 사회에 시민 불복종 권리와 충돌하는 지점이 있는 거 같습니다. 여러분은 악법에도 어떻게 대응해야 한다고 생각하시나요?",
     category: "discussion",
-    tags: ["니체", "허무주의", "현대철학", "가치관"],
-    upvotes: 42,
-    downvotes: 3,
-    comment_count: 15,
+    tags: ["소크라테스", "악법론"],
+    upvotes: 45,
+    downvotes: 0,
+    comment_count: 12,
     view_count: 234,
-    is_pinned: true,
-    created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
-    updated_at: new Date(Date.now() - 3600000 * 2).toISOString(),
+    is_pinned: false,
+    created_at: new Date(Date.now() - 3600000 * 3).toISOString(),
+    updated_at: new Date(Date.now() - 3600000 * 3).toISOString(),
     author: {
       id: "user1",
-      nickname: "철학하는개발자",
+      nickname: "u/philosopher_king",
       avatar_url: null,
       bio: null,
-      interests: { philosophers: ["니체"], themes: ["실존주의"] },
+      interests: { philosophers: ["소크라테스"], themes: ["정치철학"] },
       reading_streak: 7,
       total_highlights: 23,
       total_posts: 12,
@@ -48,24 +45,24 @@ const samplePosts: (Post & { author?: Profile })[] = [
   {
     id: "2",
     author_id: "user2",
-    title: "스토아 철학을 일상에 적용하는 방법을 공유합니다",
+    title: "[아고라 광장] 실존주의가 2030 세대에게 매력적인 이유는 무엇일까요?",
     content:
-      "최근 마르쿠스 아우렐리우스의 '명상록'을 읽고 스토아 철학을 실천하고 있습니다. 특히 '우리가 통제할 수 있는 것과 없는 것을 구분하라'는 가르침이 일상의 스트레스를 줄이는 데 큰 도움이 되었습니다.",
-    category: "insight",
-    tags: ["스토아철학", "마르쿠스아우렐리우스", "일상철학", "명상록"],
-    upvotes: 38,
-    downvotes: 2,
+      "불확실한 미래와 치열한 경쟁 속에서 '나' 자신에게 집중하고 삶의 의미를 스스로 만들어가려는 경향이 강해지는 거 같습니다. 사르트르의 '실존은 본질에 앞선다'는 명제 등에 대해 토론해봐요 싶습니다.",
+    category: "discussion",
+    tags: ["실존주의", "사르트르론"],
+    upvotes: 28,
+    downvotes: 0,
     comment_count: 8,
     view_count: 189,
     is_pinned: false,
-    created_at: new Date(Date.now() - 3600000 * 5).toISOString(),
-    updated_at: new Date(Date.now() - 3600000 * 5).toISOString(),
+    created_at: new Date(Date.now() - 3600000 * 8).toISOString(),
+    updated_at: new Date(Date.now() - 3600000 * 8).toISOString(),
     author: {
       id: "user2",
-      nickname: "일상철학자",
+      nickname: "u/existential_cat",
       avatar_url: null,
       bio: null,
-      interests: { philosophers: ["마르쿠스 아우렐리우스"], themes: ["스토아철학"] },
+      interests: { philosophers: ["사르트르"], themes: ["실존주의"] },
       reading_streak: 14,
       total_highlights: 45,
       total_posts: 8,
@@ -77,24 +74,24 @@ const samplePosts: (Post & { author?: Profile })[] = [
   {
     id: "3",
     author_id: "user3",
-    title: "칸트의 정언명령을 AI 윤리에 적용할 수 있을까요?",
+    title: "[철학자와 대화] 니체의 영원회귀 사상을 긍정적으로 받아들이는 법",
     content:
-      "AI 개발에서 윤리적 기준을 세울 때 칸트의 정언명령이 유용한 프레임워크가 될 수 있다고 생각합니다. '너의 행위의 준칙이 보편적 법칙이 되도록 행동하라'를 AI에 적용한다면 어떤 모습일까요?",
-    category: "question",
-    tags: ["칸트", "정언명령", "AI윤리", "도덕철학"],
-    upvotes: 29,
-    downvotes: 5,
-    comment_count: 22,
+      "만약 우리의 삶이 무한히 반복된다면, 절망적일까요 아니면 때 순간을 더 가치있게 살 되는 계기가 될까요? '아모르 파티(Amor Fati)'의 정신으로 영원회귀를 어떻게 삶의 동력으로 삼을 수 있을지 이야기 나눠봐요.",
+    category: "discussion",
+    tags: ["니체", "영원회귀"],
+    upvotes: 15,
+    downvotes: 0,
+    comment_count: 9,
     view_count: 156,
     is_pinned: false,
-    created_at: new Date(Date.now() - 3600000 * 8).toISOString(),
-    updated_at: new Date(Date.now() - 3600000 * 8).toISOString(),
+    created_at: new Date(Date.now() - 3600000 * 24).toISOString(),
+    updated_at: new Date(Date.now() - 3600000 * 24).toISOString(),
     author: {
       id: "user3",
-      nickname: "테크윤리학도",
+      nickname: "u/nietzsche_fan",
       avatar_url: null,
       bio: null,
-      interests: { philosophers: ["칸트"], themes: ["윤리학", "기술철학"] },
+      interests: { philosophers: ["니체"], themes: ["허무주의"] },
       reading_streak: 3,
       total_highlights: 12,
       total_posts: 5,
@@ -103,297 +100,215 @@ const samplePosts: (Post & { author?: Profile })[] = [
       updated_at: "",
     },
   },
-  {
-    id: "4",
-    author_id: "user4",
-    title: "입문자를 위한 실존주의 철학 도서 추천",
-    content:
-      "실존주의에 관심이 있지만 어디서부터 시작해야 할지 모르는 분들을 위해 입문서를 추천드립니다. 1. 사르트르의 '실존주의는 휴머니즘이다' - 짧고 핵심을 잘 담고 있습니다. 2. 카뮈의 '이방인' - 소설이라 접근하기 쉽습니다.",
-    category: "recommendation",
-    tags: ["실존주의", "도서추천", "사르트르", "카뮈", "입문"],
-    upvotes: 55,
-    downvotes: 1,
-    comment_count: 12,
-    view_count: 312,
-    is_pinned: false,
-    created_at: new Date(Date.now() - 3600000 * 24).toISOString(),
-    updated_at: new Date(Date.now() - 3600000 * 24).toISOString(),
-    author: {
-      id: "user4",
-      nickname: "책벌레철학도",
-      avatar_url: null,
-      bio: null,
-      interests: { philosophers: ["사르트르", "카뮈"], themes: ["실존주의"] },
-      reading_streak: 30,
-      total_highlights: 89,
-      total_posts: 25,
-      total_comments: 67,
-      created_at: "",
-      updated_at: "",
-    },
-  },
 ];
 
-const categories = [
-  { value: "all", label: "전체" },
-  { value: "discussion", label: "토론" },
-  { value: "question", label: "질문" },
-  { value: "insight", label: "인사이트" },
-  { value: "recommendation", label: "추천" },
-  { value: "free", label: "자유" },
+const sidebarCategories = [
+  { value: "today", label: "오늘의 질문", icon: "📋" },
+  { value: "agora", label: "아고라 광장", icon: "🏛️" },
+  { value: "philosopher", label: "철학자와 대화", icon: "💭" },
 ];
 
-const sortOptions = [
-  { value: "hot", label: "인기", icon: TrendingUp },
-  { value: "new", label: "최신", icon: Clock },
-  { value: "top", label: "추천순", icon: Award },
+const philosopherFilters = [
+  "플라톤",
+  "아리스토텔레스",
+  "니체",
+  "칸트",
+  "데카르트",
 ];
+
+const themeFilters = ["주제별 보기"];
+
+function formatTimeAgo(dateString: string): string {
+  const now = new Date();
+  const date = new Date(dateString);
+  const diffMs = now.getTime() - date.getTime();
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffDays > 0) {
+    return `${diffDays} day ago`;
+  }
+  return `${diffHours} hours ago`;
+}
 
 export default function CommunityPage() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>("all");
-  const [sortBy, setSortBy] = useState<SortType>("hot");
+  const [sortBy, setSortBy] = useState<SortType>("newest");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // 필터링 및 정렬 로직
   const filteredPosts = samplePosts
     .filter((post) => {
-      if (selectedCategory !== "all" && post.category !== selectedCategory) {
-        return false;
-      }
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         return (
           post.title.toLowerCase().includes(query) ||
-          post.content.toLowerCase().includes(query) ||
-          post.tags.some((tag) => tag.toLowerCase().includes(query))
+          post.content.toLowerCase().includes(query)
         );
       }
       return true;
     })
     .sort((a, b) => {
-      // 고정 글은 항상 상단
-      if (a.is_pinned && !b.is_pinned) return -1;
-      if (!a.is_pinned && b.is_pinned) return 1;
-
-      switch (sortBy) {
-        case "hot":
-          // 간단한 핫 스코어: (upvotes - downvotes) / 시간
-          const aScore =
-            (a.upvotes - a.downvotes) /
-            Math.pow(
-              (Date.now() - new Date(a.created_at).getTime()) / 3600000 + 2,
-              1.5
-            );
-          const bScore =
-            (b.upvotes - b.downvotes) /
-            Math.pow(
-              (Date.now() - new Date(b.created_at).getTime()) / 3600000 + 2,
-              1.5
-            );
-          return bScore - aScore;
-        case "new":
-          return (
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-          );
-        case "top":
-          return b.upvotes - b.downvotes - (a.upvotes - a.downvotes);
-        default:
-          return 0;
+      if (sortBy === "newest") {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       }
+      return (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes);
     });
 
-  const handleVote = (postId: string, voteType: 1 | -1) => {
-    console.log(`Vote ${voteType} on post ${postId}`);
-    // TODO: Supabase 투표 로직
-  };
-
-  const handleBookmark = (postId: string) => {
-    console.log(`Bookmark post ${postId}`);
-    // TODO: Supabase 북마크 로직
-  };
-
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-h2 font-bold text-foreground">커뮤니티</h1>
-          <p className="text-muted-foreground mt-1">
-            철학적 토론과 인사이트를 나누는 공간
-          </p>
-        </div>
-        <Link href="/write">
-          <Button className="bg-accent hover:bg-accent/90 text-white">
-            <PenSquare className="h-4 w-4 mr-2" />
-            글쓰기
-          </Button>
-        </Link>
-      </div>
+    <div className="flex gap-8">
+      {/* Left Sidebar */}
+      <aside className="hidden lg:block w-64 flex-shrink-0">
+        <div className="space-y-6">
+          {/* Categories */}
+          <div>
+            {sidebarCategories.map((category) => (
+              <button
+                key={category.value}
+                onClick={() => setSelectedCategory(category.value as CategoryType)}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors",
+                  selectedCategory === category.value
+                    ? "bg-orange-50 text-orange-600"
+                    : "text-gray-700 hover:bg-gray-100"
+                )}
+              >
+                <span>{category.icon}</span>
+                <span className="text-sm font-medium">{category.label}</span>
+              </button>
+            ))}
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Main Content */}
-        <div className="lg:col-span-3 space-y-4">
           {/* Filters */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex flex-col sm:flex-row gap-4">
-                {/* Category Filter */}
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((category) => (
-                    <Button
-                      key={category.value}
-                      variant={
-                        selectedCategory === category.value
-                          ? "default"
-                          : "outline"
-                      }
-                      size="sm"
-                      onClick={() =>
-                        setSelectedCategory(category.value as CategoryType)
-                      }
-                      className={cn(
-                        selectedCategory === category.value &&
-                          "bg-primary text-primary-foreground"
-                      )}
-                    >
-                      {category.label}
-                    </Button>
-                  ))}
-                </div>
-
-                {/* Sort Options */}
-                <div className="flex gap-2 sm:ml-auto">
-                  {sortOptions.map((option) => {
-                    const Icon = option.icon;
-                    return (
-                      <Button
-                        key={option.value}
-                        variant={sortBy === option.value ? "secondary" : "ghost"}
-                        size="sm"
-                        onClick={() => setSortBy(option.value as SortType)}
-                        className="gap-1"
-                      >
-                        <Icon className="h-4 w-4" />
-                        <span className="hidden sm:inline">{option.label}</span>
-                      </Button>
-                    );
-                  })}
-                </div>
+          <div>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              필터
+            </h3>
+            <div className="space-y-1">
+              <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                <span className="text-gray-400">▼</span>
+                철학자별 보기
+              </button>
+              <div className="pl-6 space-y-1">
+                {philosopherFilters.map((philosopher) => (
+                  <button
+                    key={philosopher}
+                    className="w-full text-left px-3 py-1 text-sm text-gray-600 hover:text-gray-900"
+                  >
+                    {philosopher}
+                  </button>
+                ))}
               </div>
+            </div>
+            <div className="mt-2">
+              <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                <span className="text-gray-400">▼</span>
+                주제별 보기
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
 
-              {/* Search */}
-              <div className="mt-4">
-                <Input
-                  placeholder="게시글 검색..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="max-w-md"
-                />
-              </div>
-            </CardContent>
-          </Card>
+      {/* Main Content */}
+      <main className="flex-1 min-w-0">
+        {/* Header with Search and Sort */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setSortBy("newest")}
+              className={cn(
+                "text-sm font-medium",
+                sortBy === "newest" ? "text-gray-900" : "text-gray-500"
+              )}
+            >
+              최신순
+            </button>
+            <span className="text-gray-300">|</span>
+            <button
+              onClick={() => setSortBy("popular")}
+              className={cn(
+                "text-sm font-medium",
+                sortBy === "popular" ? "text-gray-900" : "text-gray-500"
+              )}
+            >
+              인기순
+            </button>
+          </div>
 
-          {/* Post List */}
-          <div className="space-y-4">
-            {filteredPosts.length > 0 ? (
-              filteredPosts.map((post) => (
-                <PostCard
-                  key={post.id}
-                  post={post}
-                  onUpvote={(id) => handleVote(id, 1)}
-                  onDownvote={(id) => handleVote(id, -1)}
-                  onBookmark={handleBookmark}
-                />
-              ))
-            ) : (
-              <Card>
-                <CardContent className="p-8 text-center">
-                  <Filter className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="font-semibold text-lg mb-2">
-                    검색 결과가 없습니다
-                  </h3>
-                  <p className="text-muted-foreground">
-                    다른 키워드로 검색하거나 카테고리를 변경해보세요.
-                  </p>
-                </CardContent>
-              </Card>
-            )}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Search Agora..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 w-64 bg-gray-50 border-gray-200"
+            />
           </div>
         </div>
 
-        {/* Sidebar */}
+        {/* Post List */}
         <div className="space-y-4">
-          {/* Popular Tags */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">인기 태그</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  "니체",
-                  "스토아철학",
-                  "실존주의",
-                  "칸트",
-                  "일상철학",
-                  "도덕철학",
-                  "AI윤리",
-                  "명상록",
-                ].map((tag) => (
-                  <Badge
-                    key={tag}
-                    variant="secondary"
-                    className="cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors"
-                    onClick={() => setSearchQuery(tag)}
-                  >
-                    #{tag}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          {filteredPosts.map((post) => (
+            <article
+              key={post.id}
+              className="bg-white rounded-lg p-6 border border-gray-200"
+            >
+              <div className="flex gap-4">
+                {/* Vote Count */}
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl font-bold text-orange-500">
+                    {post.upvotes}
+                  </span>
+                </div>
 
-          {/* Community Stats */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">커뮤니티 통계</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">총 게시글</span>
-                <span className="font-semibold">1,234</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">오늘 작성</span>
-                <span className="font-semibold">42</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">활성 토론</span>
-                <span className="font-semibold">18</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">참여 회원</span>
-                <span className="font-semibold">567</span>
-              </div>
-            </CardContent>
-          </Card>
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-gray-500 mb-2">
+                    posted by {post.author?.nickname} • {formatTimeAgo(post.created_at)}
+                  </div>
+                  <Link href={`/community/${post.id}`}>
+                    <h2 className="text-lg font-semibold text-gray-900 hover:text-blue-600 mb-3">
+                      {post.title}
+                    </h2>
+                  </Link>
+                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                    {post.content}
+                  </p>
 
-          {/* Community Guidelines */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">커뮤니티 가이드</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="text-sm text-muted-foreground space-y-2">
-                <li>• 상호 존중하는 토론 문화</li>
-                <li>• 근거 있는 논증을 권장합니다</li>
-                <li>• 인신공격은 금지됩니다</li>
-                <li>• 출처를 명시해주세요</li>
-              </ul>
-            </CardContent>
-          </Card>
+                  {/* Tags */}
+                  <div className="flex items-center gap-2 mb-3">
+                    {post.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2 py-1 bg-orange-50 text-orange-600 text-xs rounded-md"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Comments */}
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <MessageSquare className="h-4 w-4" />
+                    <span className="text-sm">{post.comment_count} Comments</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
-      </div>
+      </main>
+
+      {/* Floating Action Button */}
+      <Link href="/write" className="fixed bottom-8 right-8">
+        <Button
+          className="rounded-full w-14 h-14 bg-blue-600 hover:bg-blue-700 shadow-lg"
+          size="icon"
+        >
+          <Plus className="h-6 w-6" />
+          <span className="sr-only">글쓰기</span>
+        </Button>
+      </Link>
     </div>
   );
 }
