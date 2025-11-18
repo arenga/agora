@@ -24,34 +24,45 @@ export default async function HomePage() {
   const supabase = await createClient();
 
   // Fetch the latest philostory
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("philostories")
     .select(
       `
       *,
-      philosopher:philosophers(id, name, name_en)
+      philosopher:philosophers!philostories_philosopher_id_fkey(id, name, name_en)
     `
     )
     .order("publish_date", { ascending: false })
     .limit(1)
     .single();
 
+  if (error || !data) {
+    return (
+      <div className="flex items-center justify-center min-h-[500px]">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            Philostory를 불러올 수 없습니다
+          </h1>
+          <p className="text-gray-600">잠시 후 다시 시도해주세요.</p>
+        </div>
+      </div>
+    );
+  }
+
   const todayPhilostory = data as unknown as Philostory;
 
   // Extract key points from modern_interpretation
-  const keyPoints = todayPhilostory?.modern_interpretation
+  const keyPoints = todayPhilostory.modern_interpretation
     .split(".")
     .filter((s) => s.trim().length > 10)
     .slice(0, 3)
     .map((s) => s.trim() + ".");
 
-  const formattedDate = todayPhilostory
-    ? new Date(todayPhilostory.publish_date).toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      })
-    : "";
+  const formattedDate = new Date(todayPhilostory.publish_date).toLocaleDateString("ko-KR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 
   return (
     <div className="space-y-8">
