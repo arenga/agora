@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Clock } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 
 interface Philosopher {
@@ -72,17 +71,13 @@ export default async function HomePage() {
     <div className="space-y-8">
       {/* Hero Section - Full Width Dark Background */}
       <section className="relative -mx-4 md:-mx-8 lg:-mx-12">
-        <div className="relative h-[500px] bg-[#1a1a2e] overflow-hidden">
-          {/* Background Image */}
-          <div className="absolute inset-0">
-            <Image
-              src="/images/nietzsche.jpg"
-              alt={todayPhilostory.philosopher.name}
-              fill
-              className="object-cover object-center opacity-40"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#1a1a2e] via-[#1a1a2e]/80 to-transparent" />
+        <div className="relative h-[500px] bg-gradient-to-br from-[#15274c] via-[#1a1a2e] to-[#2a3f5f] overflow-hidden">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+              backgroundSize: '40px 40px'
+            }} />
           </div>
 
           {/* Content */}
