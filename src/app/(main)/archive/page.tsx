@@ -100,7 +100,7 @@ export default async function ArchivePage() {
                 <button className="w-full text-left px-3 py-2 rounded-lg bg-orange-50 text-orange-600 text-sm font-medium">
                   전체
                 </button>
-                {philosophers.map((philosopher) => (
+                {philosophers.map((philosopher: Philosopher) => (
                   <button
                     key={philosopher.id}
                     className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-sm text-gray-700"
@@ -168,7 +168,7 @@ export default async function ArchivePage() {
 
           {/* Philostory Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {philostories?.map((story) => (
+            {philostories?.map((story: Philostory) => (
               <Link
                 key={story.id}
                 href={`/philostory/${story.id}`}
