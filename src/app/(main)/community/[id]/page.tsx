@@ -55,18 +55,18 @@ export default async function PostDetailPage({
   const supabase = await createClient();
 
   // Fetch post with author data
-  const { data: postData } = await supabase
+  const { data: postData, error } = await supabase
     .from("posts")
     .select(
       `
       *,
-      author:profiles(id, nickname, avatar_url, bio)
+      author:profiles!posts_author_id_fkey(id, nickname, avatar_url, bio)
     `
     )
     .eq("id", id)
     .single();
 
-  if (!postData) {
+  if (error || !postData) {
     notFound();
   }
 
@@ -78,7 +78,7 @@ export default async function PostDetailPage({
     .select(
       `
       *,
-      author:profiles(id, nickname, avatar_url, bio)
+      author:profiles!comments_author_id_fkey(id, nickname, avatar_url, bio)
     `
     )
     .eq("post_id", id)
