@@ -2,22 +2,56 @@ import { Button } from "@/components/ui/button";
 import { Clock } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { createClient } from "@/lib/supabase/server";
 
-export default function HomePage() {
-  // Mock data - 실제로는 API에서 가져올 데이터
-  const todayPhilostory = {
-    id: "1",
-    date: "07.24.2024",
-    title: "니체의 영원회귀",
-    philosopher: "니체",
-    readingTime: 10,
-    keyPoints: [
-      "모든 사건은 끝임없이 반복된다.",
-      "이 사실을 인지하고 삶을 사랑하는 것이 중요하다.",
-      "고통까지도 긍정하며 운명을 사랑하라.",
-    ],
-    progress: 30,
-  };
+interface Philosopher {
+  id: string;
+  name: string;
+  name_en: string;
+}
+
+interface Philostory {
+  id: string;
+  title: string;
+  book_title: string;
+  reading_time_minutes: number;
+  publish_date: string;
+  philosopher: Philosopher;
+  modern_interpretation: string;
+}
+
+export default async function HomePage() {
+  const supabase = await createClient();
+
+  // Fetch the latest philostory
+  const { data } = await supabase
+    .from("philostories")
+    .select(
+      `
+      *,
+      philosopher:philosophers(id, name, name_en)
+    `
+    )
+    .order("publish_date", { ascending: false })
+    .limit(1)
+    .single();
+
+  const todayPhilostory = data as unknown as Philostory;
+
+  // Extract key points from modern_interpretation
+  const keyPoints = todayPhilostory?.modern_interpretation
+    .split(".")
+    .filter((s) => s.trim().length > 10)
+    .slice(0, 3)
+    .map((s) => s.trim() + ".");
+
+  const formattedDate = todayPhilostory
+    ? new Date(todayPhilostory.publish_date).toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+    : "";
 
   return (
     <div className="space-y-8">
@@ -28,7 +62,7 @@ export default function HomePage() {
           <div className="absolute inset-0">
             <Image
               src="/images/nietzsche.jpg"
-              alt={todayPhilostory.philosopher}
+              alt={todayPhilostory.philosopher.name}
               fill
               className="object-cover object-center opacity-40"
               priority
@@ -41,7 +75,7 @@ export default function HomePage() {
             <div className="container mx-auto px-4 md:px-8 lg:px-12">
               <div className="max-w-2xl text-white">
                 <p className="text-sm text-gray-300 mb-4">
-                  {todayPhilostory.date}
+                  {formattedDate}
                 </p>
                 <h1 className="text-4xl md:text-5xl font-bold mb-6 whitespace-nowrap">
                   오늘의 Philostory: {todayPhilostory.title}
@@ -49,7 +83,7 @@ export default function HomePage() {
                 <div className="flex items-center gap-2 text-gray-300 mb-6">
                   <Clock className="h-4 w-4" />
                   <span className="text-sm">
-                    {todayPhilostory.readingTime}분 읽기 | {todayPhilostory.philosopher}
+                    {todayPhilostory.reading_time_minutes}분 읽기 | {todayPhilostory.philosopher.name}
                   </span>
                 </div>
 
@@ -57,7 +91,7 @@ export default function HomePage() {
                 <div className="mb-8">
                   <p className="text-sm font-medium text-gray-200 mb-3">핵심 요약:</p>
                   <ol className="space-y-2 text-sm text-gray-300">
-                    {todayPhilostory.keyPoints.map((point, index) => (
+                    {keyPoints?.map((point, index) => (
                       <li key={index}>
                         {index + 1}. {point}
                       </li>
@@ -89,27 +123,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Reading Progress Section */}
-      <section className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-2 text-muted-foreground mb-2">
-          <Clock className="h-4 w-4" />
-          <span className="text-sm">
-            {todayPhilostory.readingTime}분 읽기 | {todayPhilostory.philosopher}
-          </span>
-        </div>
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium">읽기 진행도</span>
-          <span className="text-sm text-muted-foreground">
-            {todayPhilostory.progress}%
-          </span>
-        </div>
-        <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-          <div
-            className="h-full bg-primary rounded-full transition-all duration-300"
-            style={{ width: `${todayPhilostory.progress}%` }}
-          />
-        </div>
-      </section>
+      {/* Reading Progress Section - Removed for now as it requires user-specific data */}
     </div>
   );
 }
