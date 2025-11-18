@@ -60,9 +60,13 @@ export default async function ArchivePage() {
   const philostories = data as unknown as Philostory[] | null;
 
   // Get unique philosophers for filtering
-  const philosophers = Array.from(
-    new Set(philostories?.map((p) => p.philosopher) || [])
-  ).filter(Boolean);
+  const philosophersMap = new Map<string, Philosopher>();
+  philostories?.forEach((p) => {
+    if (p.philosopher && !philosophersMap.has(p.philosopher.id)) {
+      philosophersMap.set(p.philosopher.id, p.philosopher);
+    }
+  });
+  const philosophers = Array.from(philosophersMap.values());
 
   // Get unique themes for filtering
   const allThemes = Array.from(

@@ -260,11 +260,11 @@ export default function PostDetailPage() {
           </h1>
 
           <div className="flex items-center gap-4 text-sm text-gray-500 mb-6">
-            <span>by {post.author?.nickname}</span>
+            <span>{post.author?.nickname}</span>
             <span>•</span>
-            <span>{timeAgo} ago</span>
+            <span>{timeAgo} 전</span>
             <span>•</span>
-            <span>{post.view_count} Views</span>
+            <span>조회 {post.view_count}</span>
           </div>
 
           {/* Tags */}
@@ -297,11 +297,11 @@ export default function PostDetailPage() {
           <div className="flex items-center gap-4 pt-6 border-t border-gray-200">
             <Button variant="ghost" size="sm" className="text-gray-600">
               <Share2 className="h-4 w-4 mr-2" />
-              Share
+              공유
             </Button>
             <Button variant="ghost" size="sm" className="text-gray-600">
               <Flag className="h-4 w-4 mr-2" />
-              Report
+              신고
             </Button>
           </div>
         </article>
@@ -310,7 +310,7 @@ export default function PostDetailPage() {
         {rootComments.length > 0 && (
           <div className="bg-white rounded-lg p-6 border border-gray-200 mb-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Best Insights
+              베스트 인사이트
             </h2>
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-start gap-3">
@@ -327,11 +327,12 @@ export default function PostDetailPage() {
                     <span className="text-xs text-gray-500">
                       {formatDistanceToNow(new Date(rootComments[0].created_at), {
                         addSuffix: false,
+                        locale: ko,
                       })}{" "}
-                      ago
+                      전
                     </span>
                     <Badge className="bg-orange-100 text-orange-700 text-xs">
-                      Best Answer
+                      베스트 답변
                     </Badge>
                   </div>
                   <p className="text-gray-700 text-sm leading-relaxed">
@@ -342,8 +343,8 @@ export default function PostDetailPage() {
                       <ThumbsUp className="h-4 w-4" />
                       {rootComments[0].upvotes}
                     </button>
-                    <button className="hover:text-gray-700">Reply</button>
-                    <button className="hover:text-gray-700">Report</button>
+                    <button className="hover:text-gray-700">답글</button>
+                    <button className="hover:text-gray-700">신고</button>
                   </div>
                 </div>
               </div>
@@ -354,7 +355,7 @@ export default function PostDetailPage() {
         {/* All Comments */}
         <div className="bg-white rounded-lg p-6 border border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900 mb-6">
-            All Comments ({post.comment_count})
+            전체 댓글 ({post.comment_count})
           </h2>
 
           {/* Comment Form */}
@@ -367,7 +368,7 @@ export default function PostDetailPage() {
               </div>
               <div className="flex-1">
                 <Textarea
-                  placeholder="Add to the discussion..."
+                  placeholder="토론에 참여해보세요..."
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   className="min-h-[100px] bg-gray-50 border-gray-200 resize-none"
@@ -378,7 +379,7 @@ export default function PostDetailPage() {
                     disabled={!newComment.trim() || isSubmitting}
                     className="bg-blue-600 hover:bg-blue-700"
                   >
-                    Post Comment
+                    댓글 작성
                   </Button>
                 </div>
               </div>
@@ -406,7 +407,7 @@ export default function PostDetailPage() {
           {/* About the Author */}
           <div className="bg-white rounded-lg p-6 border border-gray-200">
             <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-              About the Author
+              작성자 정보
             </h3>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
@@ -419,25 +420,25 @@ export default function PostDetailPage() {
                   {post.author?.nickname}
                 </p>
                 <p className="text-xs text-gray-500">
-                  Member since 2023
+                  가입일 2023
                 </p>
               </div>
             </div>
             <p className="text-sm text-gray-600 mb-4">
-              {post.author?.bio || "No bio available"}
+              {post.author?.bio || "소개가 없습니다"}
             </p>
             <Button
               variant="outline"
               className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
             >
-              View Profile
+              프로필 보기
             </Button>
           </div>
 
           {/* Related Discussions */}
           <div className="bg-white rounded-lg p-6 border border-gray-200">
             <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-              Related Discussions
+              관련 토론
             </h3>
             <div className="space-y-3">
               {relatedDiscussions.map((discussion) => (
@@ -495,13 +496,14 @@ function CommentComponent({
               {comment.author?.nickname}
             </span>
             {comment.author_id === samplePost.author_id && (
-              <Badge className="bg-blue-100 text-blue-700 text-xs">OP</Badge>
+              <Badge className="bg-blue-100 text-blue-700 text-xs">작성자</Badge>
             )}
             <span className="text-xs text-gray-500">
               {formatDistanceToNow(new Date(comment.created_at), {
                 addSuffix: false,
+                locale: ko,
               })}{" "}
-              ago
+              전
             </span>
           </div>
           <p className="text-gray-700 text-sm leading-relaxed mb-2">
@@ -512,8 +514,8 @@ function CommentComponent({
               <ArrowUp className="h-3 w-3" />
               {comment.upvotes}
             </button>
-            <button className="hover:text-gray-700">Reply</button>
-            <button className="hover:text-gray-700">Report</button>
+            <button className="hover:text-gray-700">답글</button>
+            <button className="hover:text-gray-700">신고</button>
           </div>
         </div>
       </div>
@@ -545,7 +547,7 @@ function CommentComponent({
                   !showReplies && "-rotate-90"
                 )}
               />
-              {showReplies ? "Hide" : "Show"} {replies.length} replies
+              {showReplies ? "숨기기" : "보기"} {replies.length}개 답글
             </button>
           )}
         </div>

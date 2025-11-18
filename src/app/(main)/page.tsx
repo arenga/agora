@@ -43,7 +43,7 @@ export default function HomePage() {
                 <p className="text-sm text-gray-300 mb-4">
                   {todayPhilostory.date}
                 </p>
-                <h1 className="text-4xl md:text-5xl font-bold mb-6">
+                <h1 className="text-4xl md:text-5xl font-bold mb-6 whitespace-nowrap">
                   오늘의 Philostory: {todayPhilostory.title}
                 </h1>
                 <div className="flex items-center gap-2 text-gray-300 mb-6">
