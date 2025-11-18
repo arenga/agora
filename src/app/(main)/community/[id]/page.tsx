@@ -60,7 +60,7 @@ export default async function PostDetailPage({
     .select(
       `
       *,
-      profiles(id, nickname, avatar_url, bio)
+      author:profiles(id, nickname, avatar_url, bio)
     `
     )
     .eq("id", id)
@@ -71,16 +71,7 @@ export default async function PostDetailPage({
     notFound();
   }
 
-  // Handle the case where profiles might be returned as an array
-  const rawPost = postData as any;
-  const author = Array.isArray(rawPost.profiles)
-    ? rawPost.profiles[0]
-    : rawPost.profiles;
-
-  const post = {
-    ...rawPost,
-    author,
-  } as Post;
+  const post = postData as unknown as Post;
 
   // Fetch comments with author data
   const { data: commentsData } = await supabase
@@ -88,22 +79,13 @@ export default async function PostDetailPage({
     .select(
       `
       *,
-      profiles(id, nickname, avatar_url, bio)
+      author:profiles(id, nickname, avatar_url, bio)
     `
     )
     .eq("post_id", id)
     .order("created_at", { ascending: true });
 
-  // Handle the case where profiles might be returned as an array for each comment
-  const comments = (commentsData || []).map((comment: any) => {
-    const author = Array.isArray(comment.profiles)
-      ? comment.profiles[0]
-      : comment.profiles;
-    return {
-      ...comment,
-      author,
-    };
-  }) as Comment[];
+  const comments = (commentsData as unknown as Comment[]) || [];
 
   // Increment view count
   supabase

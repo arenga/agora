@@ -29,7 +29,7 @@ export default async function HomePage() {
     .select(
       `
       *,
-      philosophers(id, name, name_en)
+      philosopher:philosophers(id, name, name_en)
     `
     )
     .order("publish_date", { ascending: false })
@@ -53,16 +53,7 @@ export default async function HomePage() {
     );
   }
 
-  // Handle the case where philosophers might be returned as an array
-  const rawData = data as any;
-  const philosopher = Array.isArray(rawData.philosophers)
-    ? rawData.philosophers[0]
-    : rawData.philosophers;
-
-  const todayPhilostory = {
-    ...rawData,
-    philosopher,
-  } as Philostory;
+  const todayPhilostory = data as unknown as Philostory;
 
   // Extract key points from modern_interpretation
   const keyPoints = todayPhilostory.modern_interpretation
