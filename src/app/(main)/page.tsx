@@ -29,7 +29,7 @@ export default async function HomePage() {
     .select(
       `
       *,
-      philosopher:philosophers!philostories_philosopher_id_fkey(id, name, name_en)
+      philosophers(id, name, name_en)
     `
     )
     .order("publish_date", { ascending: false })
@@ -37,6 +37,7 @@ export default async function HomePage() {
     .single();
 
   if (error || !data) {
+    console.error("Philostory fetch error:", error);
     return (
       <div className="flex items-center justify-center min-h-[500px]">
         <div className="text-center">
@@ -44,12 +45,24 @@ export default async function HomePage() {
             Philostory를 불러올 수 없습니다
           </h1>
           <p className="text-gray-600">잠시 후 다시 시도해주세요.</p>
+          {error && (
+            <p className="text-xs text-red-500 mt-2">{error.message}</p>
+          )}
         </div>
       </div>
     );
   }
 
-  const todayPhilostory = data as unknown as Philostory;
+  // Handle the case where philosophers might be returned as an array
+  const rawData = data as any;
+  const philosopher = Array.isArray(rawData.philosophers)
+    ? rawData.philosophers[0]
+    : rawData.philosophers;
+
+  const todayPhilostory = {
+    ...rawData,
+    philosopher,
+  } as Philostory;
 
   // Extract key points from modern_interpretation
   const keyPoints = todayPhilostory.modern_interpretation
