@@ -2,17 +2,13 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
+  Bookmark,
+  Share2,
+  Type,
   ArrowLeft,
-  Clock,
-  Eye,
-  Calendar,
-  BookOpen,
-  Lightbulb,
-  Target,
-  MessageSquare,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 interface Philosopher {
   id: string;
@@ -40,18 +36,6 @@ interface Philostory {
   view_count: number;
   philosopher: Philosopher;
 }
-
-const difficultyColors = {
-  easy: "bg-green-100 text-green-700 border-green-300",
-  medium: "bg-yellow-100 text-yellow-700 border-yellow-300",
-  hard: "bg-red-100 text-red-700 border-red-300",
-};
-
-const difficultyLabels = {
-  easy: "쉬움",
-  medium: "보통",
-  hard: "어려움",
-};
 
 export default async function PhilostoryDetailPage({
   params,
@@ -87,174 +71,121 @@ export default async function PhilostoryDetailPage({
     .then(() => {});
 
   return (
-    <div className="container max-w-4xl py-8">
-      {/* Back Button */}
-      <div className="mb-6">
-        <Link href="/archive">
-          <Button variant="ghost" size="sm">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Archive로 돌아가기
-          </Button>
+    <div className="container max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      {/* Breadcrumb */}
+      <div className="flex flex-wrap gap-2 mb-8">
+        <Link href="/" className="text-[#586a8d] dark:text-[#a0a0a0] text-sm font-medium leading-normal hover:text-[#15274c]">
+          Agora
         </Link>
+        <span className="text-[#586a8d] dark:text-[#a0a0a0] text-sm font-medium leading-normal">/</span>
+        <Link href="/archive" className="text-[#586a8d] dark:text-[#a0a0a0] text-sm font-medium leading-normal hover:text-[#15274c]">
+          Philostory
+        </Link>
+        <span className="text-[#586a8d] dark:text-[#a0a0a0] text-sm font-medium leading-normal">/</span>
+        <span className="text-[#333333] dark:text-[#e0e0e0] text-sm font-medium leading-normal">{philostory.title}</span>
       </div>
 
-      {/* Header */}
-      <header className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          {/* Philosopher Badge */}
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-lg font-semibold shadow-md">
-            {philostory.philosopher.name[0]}
+      <article>
+        {/* Header */}
+        <header className="mb-10">
+          <div className="flex flex-col gap-3">
+            <h1 className="text-[#333333] dark:text-[#e0e0e0] text-4xl lg:text-5xl font-black leading-tight tracking-[-0.033em]">
+              {philostory.title}
+            </h1>
+            <p className="text-[#586a8d] dark:text-[#a0a0a0] text-lg font-normal leading-normal">
+              {philostory.philosopher.name}, 『{philostory.book_title}』
+            </p>
           </div>
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              {philostory.philosopher.name}
-            </h2>
-            <p className="text-sm text-gray-600">{philostory.philosopher.era}</p>
+
+          {/* Controls Bar */}
+          <div className="flex justify-between items-center mt-6 border-y border-[#e9ecf1] dark:border-[#2a2e37] py-2">
+            <div className="flex gap-1">
+              <button className="p-2 text-[#586a8d] dark:text-[#a0a0a0] hover:text-[#15274c] dark:hover:text-white rounded-full transition-colors">
+                <Type className="h-5 w-5" />
+              </button>
+              <button className="p-2 text-[#586a8d] dark:text-[#a0a0a0] hover:text-[#15274c] dark:hover:text-white rounded-full transition-colors">
+                <Type className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="flex gap-1">
+              <button className="p-2 text-[#586a8d] dark:text-[#a0a0a0] hover:text-[#15274c] dark:hover:text-white rounded-full transition-colors">
+                <Bookmark className="h-5 w-5" />
+              </button>
+              <button className="p-2 text-[#586a8d] dark:text-[#a0a0a0] hover:text-[#15274c] dark:hover:text-white rounded-full transition-colors">
+                <Share2 className="h-5 w-5" />
+              </button>
+            </div>
           </div>
+        </header>
+
+        {/* Content Sections */}
+        <div className="prose prose-lg dark:prose-invert max-w-none space-y-12 text-[#333333] dark:text-[#e0e0e0] leading-relaxed" style={{lineHeight: 1.8}}>
+          {/* Original Text */}
+          <section>
+            <h3 className="text-[#333333] dark:text-[#e0e0e0] text-xl font-bold leading-tight tracking-[-0.015em] mb-4 border-l-4 border-[#15274c] pl-3">
+              철학 원문 (The Original Text)
+            </h3>
+            <p className="text-[#333333] dark:text-[#e0e0e0]">
+              &ldquo;{philostory.original_text}&rdquo;
+            </p>
+          </section>
+
+          {/* Modern Interpretation */}
+          <section>
+            <h3 className="text-[#333333] dark:text-[#e0e0e0] text-xl font-bold leading-tight tracking-[-0.015em] mb-4 border-l-4 border-[#15274c] pl-3">
+              현대어 해석 (Modern Interpretation)
+            </h3>
+            <p className="text-[#333333] dark:text-[#e0e0e0] whitespace-pre-line">
+              {philostory.modern_interpretation}
+            </p>
+          </section>
+
+          {/* Real Life Application */}
+          <section>
+            <h3 className="text-[#333333] dark:text-[#e0e0e0] text-xl font-bold leading-tight tracking-[-0.015em] mb-4 border-l-4 border-[#15274c] pl-3">
+              실생활 적용 (Practical Application)
+            </h3>
+            <p className="text-[#333333] dark:text-[#e0e0e0] whitespace-pre-line">
+              {philostory.real_life_application}
+            </p>
+          </section>
+
+          {/* Reflection Prompt */}
+          <section>
+            <h3 className="text-[#333333] dark:text-[#e0e0e0] text-xl font-bold leading-tight tracking-[-0.015em] mb-4 border-l-4 border-[#15274c] pl-3">
+              오늘의 질문 (Reflection Prompt)
+            </h3>
+            <div className="bg-[#f6f7f8] dark:bg-[#13171f] border-l-4 border-[#15274c]/50 p-6 rounded-lg">
+              {philostory.reflection_prompts.prompts.map((prompt: string, index: number) => (
+                <p key={index} className="text-lg italic text-[#333333] dark:text-[#e0e0e0] mb-2 last:mb-0">
+                  &ldquo;{prompt}&rdquo;
+                </p>
+              ))}
+            </div>
+          </section>
         </div>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          {philostory.title}
-        </h1>
-
-        {/* Meta Info */}
-        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
-          <div className="flex items-center gap-1.5">
-            <BookOpen className="h-4 w-4" />
-            <span>
-              {philostory.book_title}
-              {philostory.book_year && ` (${philostory.book_year})`}
-            </span>
+        {/* Footer */}
+        <footer className="mt-16 pt-8 border-t border-[#e9ecf1] dark:border-[#2a2e37]">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
+            <div className="flex gap-4">
+              <Link href="#" className="flex items-center gap-2 text-[#586a8d] dark:text-[#a0a0a0] hover:text-[#15274c] dark:hover:text-white transition-colors">
+                <ArrowLeft className="h-5 w-5" />
+                <span>이전 글</span>
+              </Link>
+              <Link href="#" className="flex items-center gap-2 text-[#586a8d] dark:text-[#a0a0a0] hover:text-[#15274c] dark:hover:text-white transition-colors">
+                <span>다음 글</span>
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </div>
+            <Link href="/community">
+              <Button className="flex w-full sm:w-auto min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-[#15274c] text-white text-base font-bold leading-normal tracking-[0.015em] transition-transform hover:scale-105">
+                <span className="truncate">이 주제로 토론하기</span>
+              </Button>
+            </Link>
           </div>
-          <div className="flex items-center gap-1.5">
-            <Clock className="h-4 w-4" />
-            <span>{philostory.reading_time_minutes}분</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Eye className="h-4 w-4" />
-            <span>{philostory.view_count}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Calendar className="h-4 w-4" />
-            <span>{new Date(philostory.publish_date).toLocaleDateString("ko-KR")}</span>
-          </div>
-        </div>
-
-        {/* Theme Tags and Difficulty */}
-        <div className="flex flex-wrap items-center gap-2">
-          {philostory.theme_tags.map((tag: string) => (
-            <Badge key={tag} variant="secondary" className="text-xs">
-              {tag}
-            </Badge>
-          ))}
-          <Badge
-            variant="outline"
-            className={`text-xs ${difficultyColors[philostory.difficulty]}`}
-          >
-            {difficultyLabels[philostory.difficulty]}
-          </Badge>
-        </div>
-      </header>
-
-      {/* Philosopher Bio */}
-      <section className="mb-8 p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg border border-blue-100">
-        <h3 className="text-sm font-semibold text-gray-900 mb-2">철학자 소개</h3>
-        <p className="text-sm text-gray-700 leading-relaxed">
-          {philostory.philosopher.bio}
-        </p>
-      </section>
-
-      {/* Original Text */}
-      <section className="mb-8">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
-            <BookOpen className="h-4 w-4 text-orange-600" />
-          </div>
-          <h2 className="text-xl font-bold text-gray-900">원문</h2>
-        </div>
-        <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
-          <blockquote className="text-lg leading-relaxed text-gray-800 italic">
-            &ldquo;{philostory.original_text}&rdquo;
-          </blockquote>
-        </div>
-      </section>
-
-      {/* Modern Interpretation */}
-      <section className="mb-8">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-            <Lightbulb className="h-4 w-4 text-blue-600" />
-          </div>
-          <h2 className="text-xl font-bold text-gray-900">현대적 해석</h2>
-        </div>
-        <div className="prose prose-gray max-w-none">
-          <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-            {philostory.modern_interpretation}
-          </p>
-        </div>
-      </section>
-
-      {/* Real Life Application */}
-      <section className="mb-8">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-            <Target className="h-4 w-4 text-green-600" />
-          </div>
-          <h2 className="text-xl font-bold text-gray-900">실생활 적용</h2>
-        </div>
-        <div className="p-6 bg-green-50 rounded-lg border border-green-200">
-          <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-            {philostory.real_life_application}
-          </p>
-        </div>
-      </section>
-
-      {/* Reflection Prompts */}
-      <section className="mb-8">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-            <MessageSquare className="h-4 w-4 text-purple-600" />
-          </div>
-          <h2 className="text-xl font-bold text-gray-900">성찰 질문</h2>
-        </div>
-        <div className="space-y-3">
-          {philostory.reflection_prompts.prompts.map(
-            (prompt: string, index: number) => (
-              <div
-                key={index}
-                className="flex gap-3 p-4 bg-purple-50 rounded-lg border border-purple-200"
-              >
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-200 text-purple-700 flex items-center justify-center text-sm font-semibold">
-                  {index + 1}
-                </span>
-                <p className="text-gray-700">{prompt}</p>
-              </div>
-            )
-          )}
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="mt-12 p-6 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-lg border border-orange-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">
-          이 Philostory에 대한 생각을 나눠보세요
-        </h3>
-        <p className="text-sm text-gray-600 mb-4">
-          커뮤니티에서 다른 사람들과 인사이트를 공유하고 토론해보세요
-        </p>
-        <div className="flex gap-3">
-          <Link href="/community" className="flex-1">
-            <Button variant="outline" className="w-full">
-              커뮤니티 둘러보기
-            </Button>
-          </Link>
-          <Link href="/write" className="flex-1">
-            <Button className="w-full bg-orange-600 hover:bg-orange-700">
-              내 생각 공유하기
-            </Button>
-          </Link>
-        </div>
-      </section>
+        </footer>
+      </article>
     </div>
   );
 }
